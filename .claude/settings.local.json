@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch(domain:www.autoscout24.it)",
+      "WebFetch(domain:docs.langchain4j.dev)",
+      "WebFetch(domain:www.subito.it)",
+      "WebFetch(domain:www.automobile.it)",
+      "Bash(mvn clean compile:*)",
+      "Bash(mvn dependency:resolve:*)"
+    ]
+  }
+}
