@@ -107,10 +107,29 @@
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <mainClass>it.github.usedcars.AutoFinderApplication</mainClass>
                                 </transformer>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <manifestEntries>
+                                        <Enable-Native-Access>ALL-UNNAMED</Enable-Native-Access>
+                                        <Add-Opens>java.base/sun.misc=ALL-UNNAMED</Add-Opens>
+                                    </manifestEntries>
+                                </transformer>
                             </transformers>
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.5.0</version>
+                <configuration>
+                    <mainClass>it.github.usedcars.AutoFinderApplication</mainClass>
+                    <jvmArgs>
+                        <jvmArg>--enable-native-access=ALL-UNNAMED</jvmArg>
+                        <jvmArg>--add-opens=java.base/sun.misc=ALL-UNNAMED</jvmArg>
+                    </jvmArgs>
+                </configuration>
             </plugin>
         </plugins>
     </build>

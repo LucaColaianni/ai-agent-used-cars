@@ -81,17 +81,9 @@ public class SubitoItScraper implements CarScraper {
     private String buildUrl(SearchCriteria criteria, int page) {
         StringBuilder urlBuilder = new StringBuilder(BASE_URL);
 
+        // Solo il brand va nel path (Subito usa tassonomia fissa per serie/modello)
         if (criteria.getBrand() != null) {
             urlBuilder.append("/").append(criteria.getBrand().toLowerCase());
-        }
-        if (criteria.getModel() != null) {
-            urlBuilder.append("/").append(criteria.getModel().toLowerCase().replace(" ", "-"));
-        }
-        if (criteria.getVehicleType() != null) {
-            urlBuilder.append("/").append(criteria.getVehicleType().toLowerCase());
-        }
-        if (criteria.getFuelType() != null) {
-            urlBuilder.append("/").append(criteria.getFuelType().toLowerCase());
         }
 
         urlBuilder.append("/?");
@@ -100,12 +92,28 @@ public class SubitoItScraper implements CarScraper {
 
         params.add("o=" + page);
 
+        // Modello, vehicle type e fuel type vanno come query testuale
+        // Subito li cerca nel titolo/descrizione degli annunci
+        StringBuilder queryParts = new StringBuilder();
+        if (criteria.getModel() != null) {
+            queryParts.append(criteria.getModel());
+        }
+        if (criteria.getFuelType() != null) {
+            if (queryParts.length() > 0) queryParts.append(" ");
+            queryParts.append(criteria.getFuelType());
+        }
+        if (queryParts.length() > 0) {
+            params.add("q=" + queryParts.toString().replace(" ", "+"));
+        }
+
         if (criteria.getMaxPrice() > 0) {
             params.add("pe=" + criteria.getMaxPrice());
         }
 
         urlBuilder.append(String.join("&", params));
-        return urlBuilder.toString();
+        String url = urlBuilder.toString();
+        logger.info("URL di ricerca Subito.it generato: {}", url);
+        return url;
     }
 
     private List<CarListing> scrapePage(String url) throws ScraperException {
